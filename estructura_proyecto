@@ -1,0 +1,22 @@
+proyecto/
+├── docker/
+│   └── mysql/
+│       └── init.sql
+├── src/
+│   ├── config/
+│   │   └── database.php
+│   ├── controllers/
+│   │   └── HomeController.php
+│   ├── models/
+│   │   └── BaseModel.php
+│   ├── views/
+│   │   ├── layouts/
+│   │   │   └── main.php
+│   │   └── home/
+│   │       └── index.php
+│   └── public/
+│       ├── css/
+│       ├── js/
+│       ├── .htaccess
+│       └── index.php
+└── docker-compose.yml 
