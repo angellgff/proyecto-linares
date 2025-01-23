@@ -89,7 +89,10 @@
                 </a>
             </li>
             
-            <?php if (in_array($data['user']['role'], ['admin', 'coordinador'])): ?>
+            <?php 
+            $userRole = $data['user']['role'] ?? '';
+            if (in_array($userRole, ['admin', 'coordinador'])): 
+            ?>
                 <li class="nav-item">
                     <a class="nav-link" href="/coordinador/materias">
                         <i class='bx bx-book'></i> Materias
@@ -140,7 +143,7 @@
 
     <!-- Main Content -->
     <div class="main-content">
-        <?php require_once __DIR__ . '/../home/index.php'; ?>
+        <?php echo $content; ?>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

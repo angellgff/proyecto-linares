@@ -1,4 +1,5 @@
 <?php
+ob_start(); // Iniciar el buffer de salida al principio
 require_once __DIR__ . '/../config/database.php';
 
 // Autoloader básico
@@ -119,6 +120,34 @@ switch ($uri) {
         \Middleware\AuthMiddleware::hasRole(['coordinador']);
         $controller = new Controllers\AulaController();
         $controller->index();
+        break;
+
+    case 'coordinador/profesores/create':
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\ProfesorController();
+        $controller->create();
+        break;
+
+    case (preg_match('/^coordinador\/profesores\/(\d+)\/edit$/', $uri, $matches) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\ProfesorController();
+        $controller->edit($matches[1]);
+        break;
+
+    case (preg_match('/^coordinador\/profesores\/delete\/(\d+)$/', $uri, $matches) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\ProfesorController();
+        $controller->delete($matches[1]);
+        break;
+
+    case (preg_match('/^coordinador\/profesores\/(\d+)\/horarios$/', $uri, $matches) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\ProfesorController();
+        $controller->horarios($matches[1]);
         break;
 
     default:

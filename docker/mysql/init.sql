@@ -126,15 +126,18 @@ CREATE TABLE IF NOT EXISTS bloque_horario (
     id INT AUTO_INCREMENT PRIMARY KEY,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    hora TIME NOT NULL,
-    fk_trayecto INT NOT NULL,
-    fk_aula INT NOT NULL,
-    fk_materia INT NOT NULL,
+    dia ENUM('Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes') NOT NULL,
+    hora VARCHAR(20) NOT NULL,
     fk_profesor INT NOT NULL,
-    FOREIGN KEY (fk_trayecto) REFERENCES trayecto(id),
-    FOREIGN KEY (fk_aula) REFERENCES aula(id),
+    fk_materia INT NOT NULL,
+    fk_aula INT NOT NULL,
+    fk_trayecto INT NOT NULL,
+    FOREIGN KEY (fk_profesor) REFERENCES profesor(id),
     FOREIGN KEY (fk_materia) REFERENCES materia(id),
-    FOREIGN KEY (fk_profesor) REFERENCES profesor(id)
+    FOREIGN KEY (fk_aula) REFERENCES aula(id),
+    FOREIGN KEY (fk_trayecto) REFERENCES trayecto(id),
+    CONSTRAINT unique_horario UNIQUE (dia, hora, fk_profesor),
+    CONSTRAINT unique_aula_horario UNIQUE (dia, hora, fk_aula)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Insertar datos básicos
