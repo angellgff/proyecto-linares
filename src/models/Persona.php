@@ -8,72 +8,96 @@ class Persona {
         $this->db = \Database::getInstance();
     }
 
+    public function getAll() {
+        $stmt = $this->db->prepare("SELECT * FROM persona ORDER BY primer_apellido, primer_nombre");
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     public function getById($id) {
         $stmt = $this->db->prepare("SELECT * FROM persona WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
-    public function create($data) {
-        $stmt = $this->db->prepare("
-            INSERT INTO persona (
-                primer_nombre, segundo_nombre, primer_apellido, segundo_apellido,
-                cedula, sexo, numero_telefono, correo
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        ");
-        return $stmt->execute([
-            $data['primer_nombre'],
-            $data['segundo_nombre'] ?? null,
-            $data['primer_apellido'],
-            $data['segundo_apellido'] ?? null,
-            $data['cedula'],
-            $data['sexo'] ?? null,
-            $data['numero_telefono'] ?? null,
-            $data['correo']
-        ]);
+    public function create($cedula, $primerNombre, $segundoNombre, $primerApellido, $segundoApellido, $telefono, $correo) {
+        try {
+            $stmt = $this->db->prepare("
+                INSERT INTO persona (
+                    cedula, 
+                    primer_nombre, 
+                    segundo_nombre, 
+                    primer_apellido, 
+                    segundo_apellido, 
+                    numero_telefono, 
+                    correo
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
+            ");
+            
+            $stmt->execute([
+                $cedula,
+                $primerNombre,
+                $segundoNombre,
+                $primerApellido,
+                $segundoApellido,
+                $telefono,
+                $correo
+            ]);
+
+            return $this->db->lastInsertId();
+        } catch (\PDOException $e) {
+            if ($e->getCode() == 23000) {
+                throw new \Exception("Ya existe una persona con esta cédula");
+            }
+            throw new \Exception("Error al crear la persona: " . $e->getMessage());
+        }
     }
 
-    public function update($id, $data) {
+    public function update($id, $cedula, $primerNombre, $segundoNombre, $primerApellido, $segundoApellido, $telefono, $correo) {
         try {
-            error_log("Iniciando actualización de persona ID: " . $id);
-            error_log("Datos recibidos: " . print_r($data, true));
-            
-            $sql = "UPDATE persona SET 
-                    primer_nombre = :primer_nombre,
-                    segundo_nombre = :segundo_nombre,
-                    primer_apellido = :primer_apellido,
-                    segundo_apellido = :segundo_apellido,
-                    cedula = :cedula,
-                    sexo = :sexo,
-                    numero_telefono = :numero_telefono,
-                    correo = :correo,
+            $stmt = $this->db->prepare("
+                UPDATE persona 
+                SET cedula = ?,
+                    primer_nombre = ?,
+                    segundo_nombre = ?,
+                    primer_apellido = ?,
+                    segundo_apellido = ?,
+                    numero_telefono = ?,
+                    correo = ?,
                     updated_at = CURRENT_TIMESTAMP
-                    WHERE id = :id";
-                    
-            $stmt = $this->db->prepare($sql);
+                WHERE id = ?
+            ");
             
-            $params = [
-                ':primer_nombre' => $data['primer_nombre'],
-                ':segundo_nombre' => $data['segundo_nombre'],
-                ':primer_apellido' => $data['primer_apellido'],
-                ':segundo_apellido' => $data['segundo_apellido'],
-                ':cedula' => $data['cedula'],
-                ':sexo' => $data['sexo'],
-                ':numero_telefono' => $data['numero_telefono'],
-                ':correo' => $data['correo'],
-                ':id' => $id
-            ];
-            
-            error_log("SQL: " . $sql);
-            error_log("Parámetros: " . print_r($params, true));
-            
-            $result = $stmt->execute($params);
-            error_log("Resultado de la actualización: " . ($result ? "éxito" : "fallo"));
-            
-            return $result;
+            return $stmt->execute([
+                $cedula,
+                $primerNombre,
+                $segundoNombre,
+                $primerApellido,
+                $segundoApellido,
+                $telefono,
+                $correo,
+                $id
+            ]);
         } catch (\PDOException $e) {
-            error_log("Error en actualización de persona: " . $e->getMessage());
+            if ($e->getCode() == 23000) {
+                throw new \Exception("Ya existe una persona con esta cédula");
+            }
             throw new \Exception("Error al actualizar la persona: " . $e->getMessage());
         }
+    }
+
+    public function delete($id) {
+        try {
+            $stmt = $this->db->prepare("DELETE FROM persona WHERE id = ?");
+            return $stmt->execute([$id]);
+        } catch (\PDOException $e) {
+            throw new \Exception("Error al eliminar la persona: " . $e->getMessage());
+        }
+    }
+
+    public function getByCedula($cedula) {
+        $stmt = $this->db->prepare("SELECT * FROM persona WHERE cedula = ?");
+        $stmt->execute([$cedula]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 } 

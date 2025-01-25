@@ -3,13 +3,23 @@ ob_start();
 ?>
 
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Horario del Profesor: <?php echo htmlspecialchars($data['profesor']['primer_nombre'] . ' ' . $data['profesor']['primer_apellido']); ?></h1>
+    <h1 class="h2">Horario del Alumno: <?php echo htmlspecialchars($data['alumno']['primer_nombre'] . ' ' . $data['alumno']['primer_apellido']); ?></h1>
     <div class="btn-toolbar mb-2 mb-md-0">
         <div class="btn-group me-2">
-            <a href="/coordinador/profesores" class="btn btn-sm btn-secondary">
+            <a href="/coordinador/alumnos" class="btn btn-sm btn-secondary">
                 <i class='bx bx-arrow-back'></i> Volver
             </a>
         </div>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">Información del Alumno</h5>
+        <p class="card-text">
+            <strong>Cédula:</strong> <?php echo htmlspecialchars($data['alumno']['cedula']); ?><br>
+            <strong>Trayecto:</strong> <?php echo htmlspecialchars($data['alumno']['trayecto_codigo']); ?> - <?php echo htmlspecialchars($data['alumno']['trayecto_periodo']); ?>
+        </p>
     </div>
 </div>
 
@@ -31,7 +41,7 @@ foreach ($data['horarios'] as $horario) {
         $horarios[$hora]['bloques'][$horario['dia']] = [
             'materia' => $horario['materia_codigo'],
             'aula' => $horario['aula_codigo'],
-            'trayecto' => $horario['trayecto_codigo']
+            'profesor' => $horario['profesor_nombre']
         ];
     }
 }
@@ -59,7 +69,7 @@ foreach ($data['horarios'] as $horario) {
                                 <div class="p-2">
                                     <strong><?php echo htmlspecialchars($info['bloques'][$dia]['materia']); ?></strong><br>
                                     Aula: <?php echo htmlspecialchars($info['bloques'][$dia]['aula']); ?><br>
-                                    Trayecto: <?php echo htmlspecialchars($info['bloques'][$dia]['trayecto']); ?>
+                                    Prof.: <?php echo htmlspecialchars($info['bloques'][$dia]['profesor']); ?>
                                 </div>
                             <?php endif; ?>
                         </td>

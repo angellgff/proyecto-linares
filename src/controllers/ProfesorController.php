@@ -209,22 +209,32 @@ class ProfesorController {
 
     public function horarios($id) {
         \Middleware\AuthMiddleware::isAuthenticated();
-        \Middleware\AuthMiddleware::hasRole(['coordinador', 'profesor']);
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
 
-        $profesor = $this->profesorModel->getById($id);
-        if (!$profesor) {
-            header('Location: /coordinador/profesores');
+        try {
+            $profesor = $this->profesorModel->getById($id);
+            if (!$profesor) {
+                header('Location: /coordinador/profesores?error=' . urlencode('Profesor no encontrado'));
+                exit;
+            }
+
+            $horarios = $this->profesorModel->getHorarios($id);
+            
+            // Debug
+            error_log("Profesor ID: $id");
+            error_log("Horarios recibidos: " . print_r($horarios, true));
+            
+            $data = array_merge($this->getBaseData(), [
+                'title' => 'Horario del Profesor',
+                'profesor' => $profesor,
+                'horarios' => $horarios
+            ]);
+
+            require_once __DIR__ . '/../views/coordinador/profesores/horarios.php';
+        } catch (\Exception $e) {
+            error_log("Error en horarios: " . $e->getMessage());
+            header('Location: /coordinador/profesores?error=' . urlencode($e->getMessage()));
             exit;
         }
-
-        $horarios = $this->profesorModel->getHorarios($id);
-        
-        $data = array_merge($this->getBaseData(), [
-            'title' => 'Horario del Profesor',
-            'profesor' => $profesor,
-            'horarios' => $horarios
-        ]);
-
-        require_once __DIR__ . '/../views/coordinador/profesores/horarios.php';
     }
 } 

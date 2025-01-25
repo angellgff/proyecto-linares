@@ -1,34 +1,37 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Gestión Académica</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">Sistema Académico</a>
-            <div class="navbar-nav ms-auto">
-                <a class="btn btn-primary" href="/login">Iniciar Sesión</a>
-            </div>
-        </div>
-    </nav>
+<?php
+// Asegurarnos que la sesión esté iniciada
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+ob_start();
+?>
 
-    <div class="container mt-5">
-        <div class="row justify-content-center text-center">
-            <div class="col-md-8">
-                <h1 class="display-4">Bienvenido al Sistema de Gestión Académica</h1>
-                <p class="lead">Sistema integral para la gestión de horarios, materias y trayectos académicos.</p>
-                <div class="mt-5">
-                    <a href="/login" class="btn btn-primary btn-lg mx-2">Iniciar Sesión</a>
-                    <a href="/register" class="btn btn-outline-primary btn-lg mx-2">Registrarse</a>
-                </div>
-            </div>
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold text-body-emphasis">Sistema de Gestión Académica</h1>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">
+            Bienvenido al Sistema de Gestión Académica del Instituto Universitario de Tecnología.
+            <?php if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])): ?>
+                Continúa gestionando tus actividades académicas.
+            <?php else: ?>
+                Gestiona tus horarios, materias y más de manera eficiente.
+            <?php endif; ?>
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <?php if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])): ?>
+                <a href="/dashboard" class="btn btn-primary btn-lg px-4 gap-3">
+                    <i class='bx bxs-dashboard'></i> Ir al Dashboard
+                </a>
+            <?php else: ?>
+                <a href="/login" class="btn btn-primary btn-lg px-4 gap-3">
+                    <i class='bx bx-log-in'></i> Iniciar Sesión
+                </a>
+            <?php endif; ?>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html> 
+<?php
+$content = ob_get_clean();
+require_once __DIR__ . '/layouts/landing.php';
+?> 

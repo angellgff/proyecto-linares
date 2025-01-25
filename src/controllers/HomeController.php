@@ -3,6 +3,11 @@ namespace Controllers;
 
 class HomeController {
     public function landing() {
+        // Asegurarnos que la sesión esté iniciada
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
         require_once __DIR__ . '/../views/landing.php';
     }
 

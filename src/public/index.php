@@ -115,11 +115,32 @@ switch ($uri) {
         $controller->index();
         break;
 
-    case 'coordinador/aulas':
+    case (preg_match('/^coordinador\/aulas$/', $uri) ? true : false):
         \Middleware\AuthMiddleware::isAuthenticated();
         \Middleware\AuthMiddleware::hasRole(['coordinador']);
         $controller = new Controllers\AulaController();
         $controller->index();
+        break;
+
+    case (preg_match('/^coordinador\/aulas\/create$/', $uri) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\AulaController();
+        $controller->create();
+        break;
+
+    case (preg_match('/^coordinador\/aulas\/(\d+)\/edit$/', $uri, $matches) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\AulaController();
+        $controller->edit($matches[1]);
+        break;
+
+    case (preg_match('/^coordinador\/aulas\/delete\/(\d+)$/', $uri, $matches) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\AulaController();
+        $controller->delete($matches[1]);
         break;
 
     case 'coordinador/profesores/create':
@@ -148,6 +169,118 @@ switch ($uri) {
         \Middleware\AuthMiddleware::hasRole(['coordinador']);
         $controller = new Controllers\ProfesorController();
         $controller->horarios($matches[1]);
+        break;
+
+    case (preg_match('/^coordinador\/materias$/', $uri) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\MateriaController();
+        $controller->index();
+        break;
+
+    case (preg_match('/^coordinador\/materias\/create$/', $uri) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\MateriaController();
+        $controller->create();
+        break;
+
+    case (preg_match('/^coordinador\/materias\/(\d+)\/edit$/', $uri, $matches) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\MateriaController();
+        $controller->edit($matches[1]);
+        break;
+
+    case (preg_match('/^coordinador\/materias\/delete\/(\d+)$/', $uri, $matches) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\MateriaController();
+        $controller->delete($matches[1]);
+        break;
+
+    case (preg_match('/^coordinador\/trayectos\/(\d+)\/alumnos$/', $uri, $matches) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\TrayectoController();
+        $controller->alumnos($matches[1]);
+        break;
+
+    case (preg_match('/^coordinador\/alumnos$/', $uri) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\AlumnoController();
+        $controller->index();
+        break;
+
+    case (preg_match('/^coordinador\/alumnos\/create$/', $uri) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\AlumnoController();
+        $controller->create();
+        break;
+
+    case (preg_match('/^coordinador\/alumnos\/(\d+)\/edit$/', $uri, $matches) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\AlumnoController();
+        $controller->edit($matches[1]);
+        break;
+
+    case (preg_match('/^coordinador\/alumnos\/delete\/(\d+)$/', $uri, $matches) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\AlumnoController();
+        $controller->delete($matches[1]);
+        break;
+
+    case (preg_match('/^coordinador\/alumnos\/(\d+)\/horarios$/', $uri, $matches) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\AlumnoController();
+        $controller->horarios($matches[1]);
+        break;
+
+    case (preg_match('/^coordinador\/horarios$/', $uri) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\HorarioController();
+        $controller->index();
+        break;
+
+    case (preg_match('/^coordinador\/horarios\/create$/', $uri) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\HorarioController();
+        $controller->create();
+        break;
+
+    case (preg_match('/^coordinador\/horarios\/(\d+)\/edit$/', $uri, $matches) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\HorarioController();
+        $controller->edit($matches[1]);
+        break;
+
+    case (preg_match('/^coordinador\/horarios\/delete\/(\d+)$/', $uri, $matches) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\HorarioController();
+        $controller->delete($matches[1]);
+        break;
+
+    case (preg_match('/^coordinador\/horarios\/aulas-disponibles$/', $uri) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\HorarioController();
+        $controller->getAulasDisponibles();
+        break;
+
+    case (preg_match('/^coordinador\/horarios\/profesores-disponibles$/', $uri) ? true : false):
+        \Middleware\AuthMiddleware::isAuthenticated();
+        \Middleware\AuthMiddleware::hasRole(['coordinador']);
+        $controller = new Controllers\HorarioController();
+        $controller->getProfesoresDisponibles();
         break;
 
     default:
